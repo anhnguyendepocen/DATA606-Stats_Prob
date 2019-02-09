@@ -11,15 +11,15 @@ output:
 
 #####Question 1.8
 
-Smoking habits of UK residents. A survey was conducted to study the smoking habits of UK residents. Below is a data matrix displaying a portion of the data collected in this survey. Note that "£" stands for British Pounds Sterling, "cig" stands for cigarettes, and "N/A" refers to a missing component of the data.
+Smoking habits of UK residents. A survey was conducted to study the smoking habits of UK residents. Below is a data matrix displaying a portion of the data collected in this survey. Note that "Â£" stands for British Pounds Sterling, "cig" stands for cigarettes, and "N/A" refers to a missing component of the data.
 
 |ID|sex|age|marital|grossIncome|smoke|amtWeekends|amtWeekdays|
 |---|---|---|---|---|---|---|---|
-|1|Female|42|Single|Under£2,600|Yes|12 cig/day|12 cig/day|
-|2|Male|44|Single|£10,400 to £15,600|No|N/A|N/A|
-|3|Male|53|Married|Above£36,400|Yes|6 cig/day|6 cig/day|
+|1|Female|42|Single|UnderÂ£2,600|Yes|12 cig/day|12 cig/day|
+|2|Male|44|Single|Â£10,400 to Â£15,600|No|N/A|N/A|
+|3|Male|53|Married|AboveÂ£36,400|Yes|6 cig/day|6 cig/day|
 |...|...|...|...|...|...|...|...|
-|1691|Male|40|Single|£2,600 to £5,200|Yes|8 cig/day|8 cig/day|
+|1691|Male|40|Single|Â£2,600 to Â£5,200|Yes|8 cig/day|8 cig/day|
 
 (a) What does each row of the data matrix represent?
 (b) How many participants were included in the survey?
