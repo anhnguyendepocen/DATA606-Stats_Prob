@@ -1,0 +1,185 @@
+---
+title: 'CUNY MSDS DATA 606 HW #3'
+author: "Samantha Deokinanan"
+date: "March 4, 2019"
+output: 
+  html_document:
+    theme: cerulean
+    highlight: pygments
+---
+#### Chapter 3 - Distributions of Random Variables
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+library('DATA606')
+```
+
+***
+##### Question 3.2 
+(see normalPlot)
+Area under the curve, N(0,1).
+
+(a) Z > -1.13
+
+```{r}
+# The percent of a standard normal distribution that is found in this region is:
+1-pnorm(-1.13, mean=0, sd=1)
+
+normalPlot(mean = 0, sd = 1, bounds = c(-1.13, Inf), tails = FALSE)
+```
+
+
+(b) Z < 0.18
+
+```{r}
+# The percent of a standard normal distribution that is found in this region is:
+pnorm(0.18, mean=0, sd=1)
+
+normalPlot(mean = 0, sd = 1, bounds = c(-Inf, 0.18), tails = FALSE)
+```
+
+(c) Z > 8
+
+```{r}
+# The percent of a standard normal distribution that is found in this region is:
+1-pnorm(8, mean=0, sd=1)
+
+normalPlot(mean = 0, sd = 1, bounds = c(8, Inf), tails = FALSE)
+```
+
+(d) |Z| < 0.5
+
+```{r}
+# The percent of a standard normal distribution that is found in this region is:
+x1 <- pnorm(-0.5, mean = 0, sd = 1)
+x2 <- pnorm(0.5, mean = 0, sd = 1)
+x2 - x1
+
+normalPlot(mean = 0, sd = 1, bounds = c(-0.5, 0.5), tails = FALSE)
+```
+
+
+***
+##### Question 3.4
+Triathlon times.
+
+(a) Finishing time for Men: Age 30-34 is N(4313, 583). Finishing time for Women: Age 25-29 is N(5261, 807).
+
+(b) Leo and Mary's Z-scores:
+
+```{r}
+# Z-score for Leo
+(4948 - 4313) / 583
+
+# Z-score for Mary
+(5513 - 5261) / 807
+```
+This suggest that Leo had a better timing than Mary. 
+
+(c) Leo rank better since he was more than 1 standard deviation above the mean of his respective group, while Mary did a good job by at least being 0.3 standard deivation above the mean of her respective group.
+
+(d) 
+```{r}
+# The percent of triathletes that Leo was faster than is
+pnorm(4948, mean=4313, sd=583)
+
+normalPlot(mean=4313, sd=583, bounds = c(-Inf, 4948), tails = FALSE)
+```
+
+(e)
+
+```{r}
+# The percent of triathletes that Mary was faster than is
+pnorm(5513, mean=5261, sd=807)
+
+normalPlot(mean=5261, sd=807, bounds = c(-Inf, 5513), tails = FALSE)
+```
+
+(f) The part B and C answers would not change because the ranking will not be changed and Z-score would still reflect above or below mean. Part D and E will be changed however because they used the normal distribution to find the area under a normal curve.
+
+***
+##### Question 3.18 (use qqnormsim from lab 3)
+Heights of female college students.
+
+```{r}
+# Height of 25 female college students are:
+height <- c(54,55,56,56,57,58,58,59,60,60,60,61,61,62,62,63,63,63,64,65,65,67,67,69,73)
+```
+
+(a) Mean height is 61.52 inches with standard deviation of 4.58 inches. The 68-95-99.7% Rule:
+
+68% :
+
+```{r}
+mean <- 61.52
+sd <- 4.58
+x1 <- pnorm(mean-sd, mean, sd)
+x2 <- pnorm(mean+sd, mean, sd)
+x2 - x1
+```
+
+95% :
+
+```{r}
+mean <- 61.52
+sd <- 4.58
+x1 <- pnorm(mean-2*sd, mean, sd)
+x2 <- pnorm(mean+2*sd, mean, sd)
+x2 - x1
+```
+
+99.7% : 
+
+```{r}
+mean <- 61.52
+sd <- 4.58
+x1 <- pnorm(mean-3*sd, mean, sd)
+x2 <- pnorm(mean+3*sd, mean, sd)
+x2 - x1
+```
+
+These calculation suggest that the height does approximatelt follow the 68-95-99.7% Rule.
+
+(b) The histogram has the apparent bell-curve and the simulated qq plots all look very similar to the real data, suggesting that the data for female heights are normally distributed.
+
+```{r}
+qqnormsim(height)
+```
+
+***
+##### Question 3.22
+Defective rate. 
+(a) The probability that the 10th transistor is the first with a defect is P(detect of the 10th trial) = (1-0.02)^9 * 0.02 = 0.0166 or 1.66%
+
+(b) The probability that the machine produces no defective transistors in a batch of 100 is P(no defects) = (1-0.02)^100 = 0.133 or 13.3%.
+
+(c) The number of transistors expected to be produced, if defect rate is 2%, before the first with a defect is 1/0.02 = 50, with a standard deviation of sqrt((1-0.02)/(0.02)^2) = 49.5.
+
+(d) The number of transistors expected to be produced, if defect rate is 5%, before the first with a defect is 1/0.05 = 20, with a standard deviation of sqrt((1-0.05)/(0.05)^2) = 19.5.
+
+(e) Increasing the probablity of the defect rate, even by 3%, dramatically affected the mean and standard deviation by lowering it.
+
+*** 
+##### Question 3.38
+Male Children. 
+
+(a) The probability that two of them will be boys is P(2 boys of three) = choose(3,2) x (0.51^2 * (1-0.51)^(3-2)) = 0.382.
+
+(b) The possible orderings of 3 children, 2 of whom are definitely boys, is {(boy,boy,girl), (boy,girl,boy), (girl,boy,boy)}.
+Using the addition rule for disjoint outcomes, the probability that two of them will be boys is:
+
+```{r}
+(0.51*0.51*0.49)+(0.51*0.49*0.51)+(0.49*0.51*0.51)
+```
+
+(c) With 8 children, 3 of whom are boy, finding the probablity will be tedious because there are 56 combinations to determine the probabiliies for if done using the addition rule for disjoint outcome than the binomial model.
+
+***
+##### Question 3.42
+Serving in volleyball.
+
+(a) The probability that on the 10th try she will make her 3rd successful serve is P(10th try is 3rd success) = choose(9,2) * ((1-0.15)^7)*(0.15)^3 = 0.0389 or 3.89%.
+
+(b) Since each attempt is independent of each other and the probability of success is the same for each attempt, the probability of success on the 10th serve is 0.15.
+
+(c) Part A is in relation with the outcomes from the past 9 serves, this is a negative binomial distribution which looks for the number of successes in a sequence of independent and identically distributed Bernoulli trials before a specified number of failures occurs. While Part B is only asking for the probablity of the current serve being a success regardless of what the previous serve results were.  
+
+***
