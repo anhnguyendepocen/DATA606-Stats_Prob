@@ -1,0 +1,146 @@
+---
+title: 'CUNY MSDS DATA 606 HW #4'
+author: "Samantha Deokinanan"
+date: "March 17, 2019"
+output: 
+  html_document:
+    theme: cerulean
+    highlight: pygments
+---
+#### Chapter 4 - Foundations for Inference
+
+***
+##### Question 4.4 Heights of adults.
+
+(a) The point estimate for the average height of active individuals is the mean = 171.1. The point estimate for the median height of active individuals is the mean = 170.3.
+
+(b) The point estimate for the standard deviation of the heights of active individuals is 9.4, and the IQR = Q3 - Q1 = 177.8 - 163 = 14.
+
+(c) At 180 cm tall, one is not unusually tall since the mean and standard deviation would have the upper bound = 180.5. However, on the lower bound = 161.7 (mean - sd), 155 cm would be considered unusually short.
+
+(d) If the researchers take another random sample of physically active individuals, the mean and standard deviation of the new sample will not be the same but very similar depending on the sample size taken. A larger sample would give a more closer estimate to the population mean and standard deviation.
+
+(e) We can use the standard error, which is SE = sigma/sqrt(n) = 9.4/sqrt(504) = 0.42.
+
+***
+##### Question 4.14 Thanksgiving spending, Part I.
+
+(a) False, the point estimate is always in the confidence interval.
+
+(b) False, skewness doesn't play a major role that it affects the results.
+
+(c) False, these intervals should contain the actual mean, but it is not always exactly 95% of random samples will have a sample mean in between \$80.31 and \$89.11.
+
+(d) True, by definition of a confidence interval.
+
+(e) True, the confidence level widen, the result will become a wider confidence interval and more likely to contain our estimate if we don't need to be as sure about it.
+
+(f) False, based on the formula, sigma/sqrt(n) , if we are to decrease the margin of error to a third, the sample size needs to be 9 times larger.
+
+(g) True. Proof: (upper tail - lower tail) / 2 = (89.11-80.31) / 2  = 4.40.
+
+***
+##### Question 4.24 Gifted children, Part I.
+
+(a) The distribution doesn't seem extremely skewed to affect the result greatly, plus there is the minimum sample size met with independent observations, therefore I would assume all the conditions for inference are satisfied.
+
+(b) Significance level of 0.10. Mean age of children to count to ten = 30.69 month.
+
+H0:The average age for a gifted child to count to 10 is mu = 32 months.
+
+H1: The average age for a gifted child to count to 10 is mu < 32 months.
+
+```{r}
+SE <- 4.31/sqrt(36)
+Z <- (30.69 - 32)/(SE)
+pnorm(Z)
+```
+
+With p-value < 0.1, it can be concluded that the null is rejected in favor for the alternative, that the average age for a gifted child to count to 10 is less than 32 months.
+
+(c) If the true average of the age for a gifted child to successfully count to ten is 30.69 months, there is only 3.4% chance of observing a random sample of 36 children who on average is 32 months old or less.
+
+(d) The 90% CI, with alpha = 1.645:
+
+```{r}
+lower <- 30.69 - 1.645*SE
+upper <- 30.69 + 1.645*SE
+c(lower,upper)
+```
+
+(e) Yes, since for the hypothesis testing, the results were reject, and with the confidence interval, there is no zero within the bound also suggesting rejection of the null. Therefore, both calculations are in favor of the alternative.
+
+***
+##### Question 4.26 Gifted children, Part II.
+
+(a) Average mother of gifted child IQ = 118.2, sd = 6.5.
+
+H0: The average mother of gifted child IQ is mu = 100.
+
+H0: The average mother of gifted child IQ is mu =/  100.
+
+At a significance level of 0.10, the test equals:
+```{r}
+SE <- 6.5/sqrt(36)
+Z <- (118.2 - 100)/(SE)
+2*pnorm(Z, 0,1, lower.tail = FALSE)
+```
+
+With such a micro p-value, the null hypothesis can be reject in favor for the alternative that sample mean of 100 IQ for mothers of the gifted children is different from the population mean IQ.
+
+(b) The 90% CI with alpha = 1.645:
+
+```{r}
+lower <- 118.2 - 1.645*SE
+upper <- 118.2 + 1.645*SE
+c(lower,upper)
+```
+
+(c) Yes, since for the hypothesis testing, the results were reject, and with the confidence interval, there is no zero within the bound also suggesting rejection of the null. Therefore, both calculations are in favor of the alternative.
+
+***
+##### Question 4.34 CLT
+
+The "sampling distribution" of the mean shows the distribution of n samples from the true population that has a mean of mu and a standard deviation of sigma. The spread of the sampling distribution of the mean decreases as the sample size increases, which also makes it closer to the normal distribution in shape, centered at mu.
+
+***
+##### Question 4.40 CFLBs
+
+(a) The probability that a randomly chosen light bulb lasts more than 10,500 hours is:
+
+```{r}
+1 - pnorm((10500-9000)/1000)
+```
+
+(b) The distribution of the mean lifespan of 15 light bulbs look quite normal. The mean lifespan was also quite close to the true population mean.
+
+```{r}
+set.seed(555)
+bulbs15 <- rnorm(15, mean = 9000, sd = 1000)
+hist(bulbs15)
+summary(bulbs15)
+```
+
+(c) The probability that the mean lifespan of 15 randomly chosen light bulbs is more than 10,500 hours is:
+
+```{r}
+1-pnorm((10500-mean(bulbs15))/(sd(bulbs15)/15))
+```
+
+(d) A sketch of the two distribution:
+
+```{r fig.align='center'}
+bulbTRUE <- rnorm(500, 9000, 1000) # This popualtion size was chosen so you can see the sample
+hist(bulbTRUE, col="light blue", main = "Distribution: Population (light blue) & Sample (Red)")
+hist(bulbs15,  col="red", add = TRUE)
+box()
+```
+
+(e) No, if the data was strongly skew, these estimates would be unreliable since the condition of normality was not met.
+
+***
+##### Question 4.48 Same observation, different sample size.
+
+With the only change being that the sample size increases, we know that as standard error decreases, the Z-score increases, and as Z-score increases the probability decreases so the p-value will decrease as the sample size increases.
+
+***
