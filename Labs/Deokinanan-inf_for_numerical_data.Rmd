@@ -1,0 +1,259 @@
+---
+title: 'Inference for numerical data'
+author: "Samantha Deokinanan"
+date: "24 March, 2019"
+output:
+  html_document:
+    css: ./lab.css
+    highlight: pygments
+    theme: cerulean
+  pdf_document: default
+---
+
+## North Carolina births
+
+In 2004, the state of North Carolina released a large data set containing 
+information on births recorded in this state. This data set is useful to 
+researchers studying the relation between habits and practices of expectant 
+mothers and the birth of their children. We will work with a random sample of 
+observations from this data set.
+
+## Exploratory analysis
+
+Load the `nc` data set into our workspace.
+
+```{r load-data, eval=TRUE}
+load("more/nc.RData")
+```
+
+We have observations on 13 different variables, some categorical and some 
+numerical. The meaning of each variable is as follows.
+
+|variable         | description|
+|---------------- | -------------------------------------------------------------------------|
+|`fage`           | father's age in years.|
+|`mage`           | mother's age in years.|
+|`mature`         | maturity status of mother.|
+|`weeks`          | length of pregnancy in weeks.|
+|`premie`         | whether the birth was classified as premature (premie) or full-term.|
+|`visits`         | number of hospital visits during pregnancy.|
+|`marital`        | whether mother is `married` or `not married` at birth.|
+|`gained`         | weight gained by mother during pregnancy in pounds.|
+|`weight`         | weight of the baby at birth in pounds.|
+|`lowbirthweight` | whether baby was classified as low birthweight (`low`) or not (`not low`).|
+|`gender`         | gender of the baby, `female` or `male`.|
+|`habit`          | status of the mother as a `nonsmoker` or a `smoker`.|
+|`whitemom`       | whether mom is `white` or `not white`.|
+
+1.  What are the cases in this data set? How many cases are there in our sample?
+
+*Answer*
+
+There are 13 variables in our sample with 1000 cases.
+
+***
+
+As a first step in the analysis, we should consider summaries of the data. This
+can be done using the `summary` command:
+
+```{r summary, eval=TRUE}
+summary(nc)
+```
+
+As you review the variable summaries, consider which variables are categorical 
+and which are numerical. For numerical variables, are there outliers? If you 
+aren't sure or want to take a closer look at the data, make a graph.
+
+Consider the possible relationship between a mother's smoking habit and the 
+weight of her baby. Plotting the data is a useful first step because it helps 
+us quickly visualize trends, identify strong associations, and develop research
+questions.
+
+2.  Make a side-by-side boxplot of `habit` and `weight`. What does the plot 
+highlight about the relationship between these two variables?
+
+*Answer*
+
+```{r}
+boxplot(nc$weight[nc$habit =="nonsmoker"],nc$weight[nc$habit == "smoker"],xlab="Habit",ylab="Weight",main="Baby Weight by Mother's Habit", names = c("nonsmoker", "smoker"))
+```
+
+From the plot, it is evident by the median line that babies from nonsmokers weight more than those from smokers. The is however, quite a few outliers for nonsmokers. The spread size seem relatively similar, however, when compared, nonsmokers' baby were still heavier than smoker.
+
+***
+
+The box plots show how the medians of the two distributions compare, but we can
+also compare the means of the distributions using the following function to 
+split the `weight` variable into the `habit` groups, then take the mean of each
+using the `mean` function.
+
+```{r by-means, eval=TRUE}
+by(nc$weight, nc$habit, mean)
+```
+
+There is an observed difference, but is this difference statistically 
+significant? In order to answer this question we will conduct a hypothesis test
+.
+
+## Inference
+
+3.  Check if the conditions necessary for inference are satisfied. Note that 
+you will need to obtain sample sizes to check the conditions. You can compute 
+the group size using the same `by` command above but replacing `mean` with 
+`length`.
+
+*Answer*
+```{r}
+by(nc$weight, nc$habit, length)
+```
+
+From the above, the sample sizes are indeed large enough, n > 30. From the box plot, the data appears quite normal in spite of the outliers as the sample is large enough to not be greatly affected by it. And lastly, the sample is independent as they are birth records for the state of NC.
+
+***
+
+4.  Write the hypotheses for testing if the average weights of babies born to 
+smoking and non-smoking mothers are different.
+
+*Answer*
+
+$H_0 : \mu_2 - \mu_1 = 0$: The average weights of babies born to smoking and non-smoking mothers are not different.
+
+$H_1 : \mu_2 - \mu_1 \neq 0$: The average weights of babies born to smoking and non-smoking mothers are different.
+
+***
+
+Next, we introduce a new function, `inference`, that we will use for conducting
+hypothesis tests and constructing confidence intervals. 
+
+```{r inf-weight-habit-ht, eval=TRUE, tidy=FALSE}
+inference(y = nc$weight, x = nc$habit, est = "mean", type = "ht", null = 0, 
+          alternative = "twosided", method = "theoretical")
+```
+
+Let's pause for a moment to go through the arguments of this custom function. 
+The first argument is `y`, which is the response variable that we are 
+interested in: `nc$weight`. The second argument is the explanatory variable, 
+`x`, which is the variable that splits the data into two groups, smokers and 
+non-smokers: `nc$habit`. The third argument, `est`, is the parameter we're 
+interested in: `"mean"` (other options are `"median"`, or `"proportion"`.) Next
+we decide on the `type` of inference we want: a hypothesis test (`"ht"`) or a 
+confidence interval (`"ci"`). When performing a hypothesis test, we also need 
+to supply the `null` value, which in this case is `0`, since the null 
+hypothesis sets the two population means equal to each other. The `alternative`
+hypothesis can be `"less"`, `"greater"`, or `"twosided"`. Lastly, the `method` 
+of inference can be `"theoretical"` or `"simulation"` based.
+
+5.  Change the `type` argument to `"ci"` to construct and record a confidence 
+interval for the difference between the weights of babies born to smoking and 
+non-smoking mothers.
+
+*Answer*
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+inference(y = nc$weight, x = nc$habit, est = "mean", type = "ci", null = 0, 
+          alternative = "twosided", method = "theoretical")
+```
+
+This reveals that the 95% confidence interval is (-0.58, -0.05).
+
+***
+
+By default the function reports an interval for ($\mu_{nonsmoker} - \mu_{smoker}$)
+. We can easily change this order by using the `order` argument:
+
+```{r inf-weight-habit-ci, eval=TRUE, tidy=FALSE}
+inference(y = nc$weight, x = nc$habit, est = "mean", type = "ci", null = 0, 
+          alternative = "twosided", method = "theoretical", 
+          order = c("smoker","nonsmoker"))
+```
+
+* * *
+
+## On your own
+
+-   Calculate a 95% confidence interval for the average length of pregnancies 
+(`weeks`) and interpret it in context. Note that since you're doing inference 
+on a single population parameter, there is no explanatory variable, so you can 
+omit the `x` variable from the function.
+
+*Answer*
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+inference(y = nc$weeks, est = "mean", type = "ci", null = 0, alternative = "twosided", method = "theoretical")
+```
+
+The 95 % confidence interval suggest that the average length of pregnancies (weeks), without any conditions, is between 38.15 and 38.52.
+
+***
+
+-   Calculate a new confidence interval for the same parameter at the 90% 
+confidence level. You can change the confidence level by adding a new argument 
+to the function: `conflevel = 0.90`.
+
+*Answer*
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+inference(y = nc$weeks, est = "mean", type = "ci", null = 0, alternative = "twosided", method = "theoretical", conflevel = 0.90)
+```
+
+The new 90%  confidence interval suggest that the average length of pregnancies (weeks), without any conditions, is between 38.18 and 38.49.
+
+***
+
+-   Conduct a hypothesis test evaluating whether the average weight gained by 
+younger mothers is different than the average weight gained by mature mothers.
+
+*Answer*
+
+$H_0 : \mu_2 - \mu_1 = 0$: The average weight gained by younger mothers is not different than the average weight gained by mature mothers.
+
+$H_1 : \mu_2 - \mu_1 \neq 0$: The average weight gained by younger mothers is different than the average weight gained by mature mothers.
+
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+inference(y = nc$gained, x = nc$mature, est = "mean", type = "ht", null = 0, alternative = "twosided", method = "theoretical")
+```
+
+Based on the test, we can conclude that we failed to reject the null hypothesis, and that there is no evidence that the average weight gained by younger mothers is different than the average weight gained by mature mothers.
+
+***
+
+-   Now, a non-inference task: Determine the age cutoff for younger and mature 
+mothers. Use a method of your choice, and explain how your method works.
+
+*Answer*
+
+```{r}
+by(nc$mage, nc$mature, summary)
+```
+
+`Summary` provides the minimum and maximum value of the data. For a *young* mother, they had to be from the start age of puberty (~ age 13) to less than 35 years old or older, while a *mature* mother was considered to be someone who is 35 years old and older to bear a child, cutoff could be age of menopause (~ age 50). Therefore, the cutoff age for a youger and mature mother is 35 years old.
+
+***
+
+-   Pick a pair of numerical and categorical variables and come up with a 
+research question evaluating the relationship between these variables. 
+Formulate the question in a way that it can be answered using a hypothesis test
+and/or a confidence interval. Answer your question using the `inference` 
+function, report the statistical results, and also provide an explanation in 
+plain language.
+
+*Answer*
+
+Let's test the relationship between mothers' smoking habits and the	length of pregnancy in weeks. 
+
+$H_0 : \mu_2 - \mu_1 = 0$: The average length of pregnancy for nonsmoker mothers is no different than the average length of pregnancy for smoker mothers.
+
+$H_1 : \mu_2 > \mu_1$: The average length of pregnancy for nonsmoker mothers is different than the average length of pregnancy for smoker mothers.
+
+```{r}
+inference(y = nc$weeks, x = nc$mature, est = "mean", type = "ht", null = 0, alternative = "greater", method = "theoretical", order = c("mature mom","younger mom"))
+```
+
+At a 95% confidence level, with a z-score < 1.96, the critical level and p-value > 0.05, we fail to reject the null. This suggest that there is no evidence that the  average length of pregnancy for nonsmoker mothers is different than the average length of pregnancy for smoker mothers.
+
+***
+
+<div id="license">
+This is a product of OpenIntro that is released under a [Creative Commons 
+Attribution-ShareAlike 3.0 Unported](http://creativecommons.org/licenses/by-sa/3.0).
+This lab was adapted for OpenIntro by Mine &Ccedil;etinkaya-Rundel from a lab 
+written by the faculty and TAs of UCLA Statistics.
+</div>
