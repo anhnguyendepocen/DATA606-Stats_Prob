@@ -1,0 +1,164 @@
+---
+title: 'CUNY MSDS DATA 606 HW #5'
+author: "Samantha Deokinanan"
+date: "March 17, 2019"
+output: 
+  html_document:
+    theme: cerulean
+    highlight: pygments
+---
+#### Chapter 5 - Foundations for Inference
+
+***
+##### Question 5.6 Working backwards, Part II
+
+A 90% confidence interval for a population mean is (65,77). The population distribution is approximately normal and the population standard deviation is unknown. This confidence interval is based on a simple random sample of 25 observations.
+
+The sample mean is therfore:
+
+$(x_2 + x_1)/2 = (77 + 65)/2 = 71$
+
+The margin of error is therefore:
+
+$(x_2 - x_1)/2 = (77 - 65)/2 = 6$
+
+The sample standard deviation is therefore:
+
+```{r}
+tval <- qt(0.95, 25-1)
+
+# Standard deviation is
+(71/tval)*sqrt(25)
+```
+
+***
+##### Question 5.14 SAT scores
+
+(a) At 90% confidence interval, the sample should be:
+
+$sample size = ((Z_{crt} * sd) / ME)^2 = ((1.65 * 250) / 25)^2 = 272$
+
+(b) If at 99% CI, there will require more than 272 for the sample size since, by the formula, we are multipling be a larger number.
+
+(c) In this case, Luke's $sample size = ((Z_{crt} * sd) / ME)^2 = ((2.576 * 250) / 25)^2 = 664$
+
+***
+##### Question 5.20 High School and Beyond, Part I
+
+(a) Yes, from the boxplot, the median is greater for the writing scores, similarly, the difference in the histogram is more accumulated on the negative said further suggesting that writing scores were higher.
+
+(b) No, since reading and writing score are from the same individual student, they have a special correspondence which is not independent, making them paired observation.
+
+(c) The hypotheses are:
+
+$H_0 =$ There is no difference between the average reading and writing score, $\mu_{diff} = 0$.
+
+$H_A =$ There is a difference between the average reading and writing score, $\mu_{diff} \neq 0$.
+
+(d) The following conditions are met:
+
+* The sample observations are randomly sampled from independent students.
+* The sample size is $\geq$ 30 (in this case, n = 200).
+* The distribution shown in the histogram does not appear strongly skewed, but relatively normal. 
+
+(e) $\bar{x}_{read - write} = - 0.545$ and sd = 8.887 pts. 
+
+```{r}
+sd <- 8.887
+mu <- -0.545
+n <- 200
+df <- n - 1
+SE <- sd / sqrt(n)
+
+# T statistic
+tval <- (mu - 0) / SE
+
+# p value
+pt(tval, df)
+```
+
+With a p-value > 0.05, there is not convincing evidence of a difference in student's reading and writing exam scores since we fail to reject the null hypothesis.
+
+(f) A Type 2 error is when there is a failure to reject the null hypothesis when the alternative hypothesis may actually be true. There may be a difference, but with our sample, we were unable to prove it.
+
+(g) Yes, in this case, the confidence interval will include 0 because we couldn't reject the null that test for no difference in the reading and writing scores.
+
+***
+##### Question 5.32 Fuel efficiency of manual and automatic cars, Part I.
+
+Assuming the conditions for inference are satified, the test hypotheses are:
+
+$H_0 =$ There is no difference between the average fuel efficiency of cars with manual and automatic transmissions in terms of their average city mileage, $\mu_{diff} = 0$.
+
+$H_A =$ There is a difference between the average fuel efficiency of cars with manual and automatic transmissions in terms of their average city mileage, $\mu_{diff} \neq 0$.
+
+```{r}
+mu <- (16.12-19.85)
+sd1 <- 3.58
+sd2 <- 4.51
+n1 <- 26
+n2 <- 26
+df <- min(c(n1,n2) - 1)
+SE <- sqrt((sd1^2 / n1) + (sd2^2 / n2))
+
+# T statistic
+tval <- (mu - 0) / SE
+
+# p value
+2*pt(tval, df)
+```
+
+With a p-value < 0.05, there is convincing evidence of a difference between the average fuel efficiency of cars with manual and automatic transmissions in terms of their average city mileage.
+
+***
+##### Question 5.48 Work hours and education
+
+(a) The hypotheses are:
+
+$H_0$: The mean outcome is the same across all categories, $\mu_1=\mu_2=...=\mu_5$.
+
+$H_A$ : At least one mean is different than others.
+
+(b) For ANOVA, there must be independence within and across groups, normality, and nearly equal variability across groups. From the box plot, this data set meets those requirements.
+
+(c) The completed table from the results below.
+
+```{r include=FALSE}
+df<- read.csv("path/to/.csv", header=TRUE, stringsAsFactors = FALSE)
+```
+
+```{r}
+mu <- c(38.67, 39.6, 41.39, 42.55, 40.85)
+muall <- 40.45
+sd <- c(15.81, 14.97, 18.1, 13.62, 15.51)
+sdall <- 15.17
+n <- c(121, 546, 97, 253, 155)
+
+# The DFs
+df$DF[1] <- 5-1
+df$DF[3] <- 1172-1
+df$DF[2] <- df$DF[3] - df$DF[1] 
+
+# The sum of the squares
+df$Sum.Sq[1] <- df$Mean.Sq[1]*df$DF[1]
+df$Sum.Sq[3] <- df$Sum.Sq[2] + df$Sum.Sq[1]
+
+# The Mean Square Error
+df$Mean.Sq[2] <- round(df$Sum.Sq[2]/df$DF[2],3)
+
+# F value
+df$F.value[1] <- round(df$Mean.Sq[1] / df$Mean.Sq[2],3)
+```
+
+```{r echo=FALSE}
+df[df == 0] <- ""
+
+library(kableExtra)
+kable(df) %>%
+  kable_styling("striped", full_width = F) %>%
+  column_spec(1, bold = TRUE)
+```
+
+(d) Since the p-value > 0.05, there is insufficient evidence of a significant difference between the groups as we cannot reject the null hypothesis.
+
+***
