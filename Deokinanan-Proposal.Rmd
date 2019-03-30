@@ -1,0 +1,155 @@
+---
+title: "DATA 606 Data Project Proposal"
+author: "Samantha Deokinanan"
+date: "31st March, 2019"
+output:
+  html_document:
+    theme: journal
+---
+
+### Data Preparation
+
+```{r setup, echo=TRUE, results='hide', warning=FALSE, message=FALSE}
+
+library(readr)
+AirQualityUCI <- read_csv("AirQualityUCI.csv", col_types = cols(AH = col_number(), `C6H6(GT)` = col_number(), `CO(GT)` = col_number(), Date = col_date(format = "%m/%d/%Y"), `NMHC(GT)` = col_number(), `NO2(GT)` = col_number(), `NOx(GT)` = col_number(), `PT08.S1(CO)` = col_number(), `PT08.S2(NMHC)` = col_number(), `PT08.S3(NOx)` = col_number(), `PT08.S4(NO2)` = col_number(), `PT08.S5(O3)` = col_number(), RH = col_number(), T = col_number(), Time = col_time(format = "%H:%M:%S")))
+
+# Identifying seasons and month names, and split date into year, month, and day
+library(dplyr)
+library(tidyr)
+library(lubridate)
+
+# Month Name
+AirQualityUCI$MonthName <- month(ymd(AirQualityUCI$Date), label = TRUE, abbr = FALSE)
+
+# Identify the season
+Season <- function(Date) {
+    Winter <- as.Date("2003-12-20", format = "%Y-%m-%d") 
+    Spring <- as.Date("2004-3-20",  format = "%Y-%m-%d") 
+    Summer <- as.Date("2004-6-20",  format = "%Y-%m-%d") 
+    Fall <- as.Date("2004-9-20",  format = "%Y-%m-%d")
+    Winter2 <- as.Date("2004-12-20", format = "%Y-%m-%d")
+    ifelse (Date >= Winter & Date < Spring, "Winter 04", 
+      ifelse (Date >= Spring & Date < Summer, "Spring 04",
+        ifelse (Date >= Summer & Date < Fall, "Summer 04",
+          ifelse (Date >= Fall & Date < Winter2, "Fall 04", "Winter 05"))))
+}
+
+AirQualityUCI$Season <- Season(AirQualityUCI$Date)
+
+# Split date into year, month and day
+AirQualityUCI <- AirQualityUCI %>%
+  separate(Date, sep="-", into = c("Year", "Month", "Day"))
+
+# Missing values (indicated by -200) reassigned to NA
+AirQualityUCI[AirQualityUCI == -200] <- NA
+```
+
+### Research question 
+
+I will investigate the following questions:
+
+* Carbon monoxide (CO) is one of the most harmful air pollutant.  
+    + What are the predictors that affects the level of CO in the air?   
+    + With the significant predictor(s) that affects the level of CO in the air, how do they change based on the season? Is a season more prone to more emission of one or more of a specific air pollutant than another?  
+* When combusted, Non-Metanic HydroCarbons (NMHC) produces CO.  
+    + With the limited data on NMHC concentration (90% missing values), is NMHC still a contributor in predicting the level of CO in the air given this data? 
+    + How does this result of the true concentration compared to the hourly averaged sensor response?
+* Secondary pollutants are formed in the air as a result of chemical reactions. Ground-level ozone ($O_3$) is form by the action of sunlight on volatile organic compounds such as Benzene ($C_6H_6$) in the presence of nitrogen dioxide ($NO_2$). There are no direct man-made emissions of ozone to the atmosphere.   
+    + Are there any other predictors that affect the level of $O_3$ in the air? How impactful are their presence? 
+    + Is there any significance difference of the $O_3$ level by season?
+
+### Cases 
+
+The data set contains 9358 independent instances of 10 hourly averaged responses from an Air Quality Chemical Multisensor Device located within an Italian city. Data were recorded from March 2004 to February 2005 (one year) representing the longest freely available recordings of on field deployed air quality chemical sensor devices responses.
+
+The variables of the **original** data set are:
+
+(1) Date	(DD/MM/YYYY)   
+(2) Time	(HH.MM.SS)   
+(3) True hourly averaged concentration CO in $mg/m^3$ (reference analyzer)   
+(4) PT08.S1 (tin oxide) hourly averaged sensor response (nominally CO targeted)  	
+(5) True hourly averaged overall Non Metanic HydroCarbons concentration in $microg/m^3$ (reference analyzer)   
+(6) True hourly averaged Benzene concentration in $microg/m^3$ (reference analyzer)  
+(7) PT08.S2 (titania) hourly averaged sensor response (nominally NMHC targeted)	  
+(8) True hourly averaged NOx concentration in ppb (reference analyzer)   
+(9) PT08.S3 (tungsten oxide) hourly averaged sensor response (nominally NOx targeted)   
+(10) True hourly averaged $NO_2$ concentration in $microg/m^3$ (reference analyzer)	  
+(11) PT08.S4 (tungsten oxide) hourly averaged sensor response (nominally $NO_2$ targeted)	  
+(12) PT08.S5 (indium oxide) hourly averaged sensor response (nominally $O_3$ targeted)   
+(13) Temperature in °C	  
+(14) Relative Humidity (%)   
+(15) AH Absolute Humidity   
+
+### Data collection 
+
+Data was collected by Saverio De Vito (saverio.devito '@' enea.it) from ENEA - National Agency for New Technologies, Energy and Sustainable Economic Development. The data was submitted to the University of California Irvine, School of Information and Computer Science, Machine Learning Repository.
+
+### Type of study 
+
+This is an observational study since it contains responses of a gas multisensor device deployed on the field in an Italian city.
+
+### Data Source 
+
+This data set was retrieved from:
+
+Dua, D. and Graff, C. (2019). [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml). Irvine, CA: University of California, School of Information and Computer Science.
+
+The source citation is:
+
+S. De Vito, E. Massera, M. Piga, L. Martinotto, G. Di Francia, On field calibration of an electronic nose for benzene estimation in an urban pollution monitoring scenario, Sensors and Actuators B: Chemical, Volume 129, Issue 2, 22 February 2008, Pages 750-757, ISSN 0925-4005, [Web Link](https://www.sciencedirect.com/science/article/pii/S0925400507007691?via%3Dihub).
+
+### Dependent Variable
+
+The response variables are the 10 hourly averaged responses from an Air Quality Chemical Multisensor Device, in addition to Temperature, Relative Humidity and Absolute Humidity records. All of which are quantitative.  
+
+### Independent Variable
+
+The independent variables are the data and time the responses were recorded. While `Time` is quantitative, `Date` was in both quantitative and qualitative formats for different analysis. `Date` was tidied and transformed into qualitative variables `Season`, and `MonthName`
+
+### Relevant summary statistics 
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+library(psych)
+sapply(AirQualityUCI[,-c(1:4,18:19)], describe)
+
+library(rcompanion)
+par(mfrow = c(2,2))
+plotNormalHistogram(AirQualityUCI$`CO(GT)`, main = "CO(GT)")
+plotNormalHistogram(AirQualityUCI$`C6H6(GT)`, main = "C6H6(GT)")
+plotNormalHistogram(AirQualityUCI$`NOx(GT)`, main = "NOx(GT)")
+plotNormalHistogram(AirQualityUCI$`PT08.S3(NOx)`, main = "PT08.S3(NOx)")
+```
+
+From the above results, a few variables such as `CO (GT)`, `C6H6(GT)`, and `NOx(GT)` are highly skewed. These variables needed to be normalized before any analysis is conducted. 
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+# Add a value of 1 to each record and log transform the data
+logAQ <- log(AirQualityUCI[,-c(1:4,18:19)]+1)
+sapply(logAQ, describe)
+
+par(mfrow = c(2,2))
+plotNormalHistogram(logAQ$`CO(GT)`, main = "CO(GT)")
+plotNormalHistogram(logAQ$`C6H6(GT)`, main = "C6H6(GT)")
+plotNormalHistogram(logAQ$`NOx(GT)`, main = "NOx(GT)")
+plotNormalHistogram(logAQ$`PT08.S3(NOx)`, main = "PT08.S3(NOx)")
+par(mfrow = c(1,1))
+```
+
+While the transformed data successfully follow a normal distribution very well, `NOx(GT)` is probably about as close as I can get with this particular data.
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.align='center'}
+AirQualityUCI$Season <- as.factor(AirQualityUCI$Season)
+AirQualityUCI$Season <- factor(AirQualityUCI$Season , levels = levels(AirQualityUCI$Season)[c(4, 2, 3, 1, 5)])
+
+describeBy(AirQualityUCI$`CO(GT)`, 
+           group = AirQualityUCI$Season, mat=TRUE)
+
+boxplot(AirQualityUCI$`CO(GT)`~Season, data = AirQualityUCI, main = "Boxplots of CO records for each Season", xlab = "Season", ylab = "Concentration of CO", col="indianred2")
+
+```
+
+There are a quite a few outliers which may be the reason for skewness. In addition, it is apparent that the CO concentration tends to decrease from Winter to Summer but increases again in Fall.
+
+
+
