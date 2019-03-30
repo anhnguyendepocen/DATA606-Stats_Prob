@@ -77,7 +77,7 @@ The variables of the **original** data set are:
 (10) True hourly averaged $NO_2$ concentration in $microg/m^3$ (reference analyzer)	  
 (11) PT08.S4 (tungsten oxide) hourly averaged sensor response (nominally $NO_2$ targeted)	  
 (12) PT08.S5 (indium oxide) hourly averaged sensor response (nominally $O_3$ targeted)   
-(13) Temperature in °C	  
+(13) Temperature in Â°C	  
 (14) Relative Humidity (%)   
 (15) AH Absolute Humidity   
 
