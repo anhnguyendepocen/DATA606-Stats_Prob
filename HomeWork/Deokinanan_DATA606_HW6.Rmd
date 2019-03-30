@@ -1,0 +1,178 @@
+---
+title: 'CUNY MSDS DATA 606 HW #6'
+author: "Samantha Deokinanan"
+date: "March 31, 2019"
+output: 
+  html_document:
+    theme: cerulean
+    highlight: pygments
+---
+#### Chapter 6 - Inference for Categorical Data
+
+***
+##### Question 6.6
+
+(a) We are 95% confident that between 43% and 49% of Americans in this sample support the decision of the U.S. Supreme Court on the 2010 healthcare law.
+
+FALSE, it is a sample statistic that 46% of Americans support the decision of the U.S. Supreme Court on the 2010 healthcare law.
+
+(b) We are 95% confident that between 43% and 49% of Americans support the decision of the U.S. Supreme Court on the 2010 healthcare law.
+
+TRUE, this sample allows us to make an inference about the population.
+
+(c) If we considered many random samples of 1,012 Americans, and we calculated the sample proportions of those who support the decision of the U.S. Supreme Court, 95% of those sample proportions will be between 43% and 49%.
+
+FALSE, the CI is about the population proportion and not about a sample statistic.
+
+(d) The margin of error at a 90% confidence level would be higher than 3%.
+
+FALSE, it would be lower, since we are lowering our confidenc level.
+
+***
+##### Question 6.12
+
+(a) 48% is a sample statistics because it was calculated based on a 1,259 sample of the total US population.
+
+(b) The 95% CI is
+
+```{r}
+n <- 1259
+p <- 0.48
+
+# Standard Error
+
+SE <- sqrt((p*(1-p))/n)
+
+# CI
+c(p-1.96*SE, p+1.96*SE)
+```
+
+Based on the results, the proportion of US residents who think marijuana should be made legal is from 45.2% to 50.8%.
+
+(c) Yes, our sample observations appears independent and the sample size is large enough such that $n * p \geq 10$ and $n * (1-p) \geq 10$, thus the point estimate will be normally distributed.
+
+(d) No, because proportion of Americans who think marijuana should be legalized is not above 50%.
+
+
+***
+##### Question 6.20
+
+$Margin of Error = z_{critical} * sqrt((p*(1-p))/n)$
+
+```{r}
+
+p <- 0.48
+ME <- 0.02
+z <- 1.96
+
+# Therefore, the number of repondents needed is, n =
+(p*(1-p)*(z^2))/(ME^2)
+```
+
+***
+##### Question 6.28
+
+data | California | Oregon
+-----|------------|--------
+sleep deprived | 924 | 413
+total | 11545 | 4691
+p_hat | 0.08 | 0.088
+---------------------------
+
+```{r}
+p_org <- 0.088
+p_cal <- 0.08
+n_org <- 4691
+n_cal <- 11545
+z <- 1.96
+
+pdiff <- p_org - p_cal
+
+SE <- sqrt(((p_org*(1-p_org))/n_org) + ((p_cal*(1-p_cal))/n_cal))
+
+c(pdiff-z*SE,pdiff+z*SE)
+```
+
+As a result, the 95% confidence interval reveal we cannot reject a difference of 0, therefore the proportions are not statisitcally different.
+
+***
+##### Question 6.44
+
+(a) The hypotheses are:
+
+$H_0$: The observed counts from the habitats of region follow the same distribution as reported.
+
+$H_A$: The observed counts from the habitats of region do not follow the same distribution as reported.
+
+(b) A Chi-square test for a one-way table.
+
+(c) The assumptions are:
+
+- Independence: each case are independent since they are from different sites.
+- Sample size is expected to be greater than 5.
+- Degree of freedom is greater than 1.
+
+(d) 
+
+```{r}
+obs <- c(4, 16, 67, 345)
+percent <- c(0.048, 0.147, 0.396, 1-sum(0.048, 0.147, 0.396))
+expected <- 426*percent
+
+k <- 4
+df <- k - 1
+
+# Compute the chi-squared test statistic
+chi <- (obs- expected) ^ 2 / expected
+chi <- sum(chi)
+
+# check the chi-squared test statistic and find p-val
+1 - pchisq(chi, df = df)
+```
+
+Based on the results, we conclude that there is convincing evidence that the barking deer forage in certain habitats over others.
+
+***
+##### Question 6.48
+
+(a) A chi-squared test for two-way tables is appropriate test for evaluating if there is an association between coffee intake and depression.
+
+(b) The hypotheses for the chi-squared two-way table test are:
+
+$H_0$: There is no association between caffeinated coffee consumption and depression.
+
+$H_A$: There is an association between caffeinated coffee consumption and depression.
+
+(c) 
+
+```{r}
+
+# overall proportion of women who do suffer from depression
+
+2607/50739
+
+# overall proportion of women who do not suffer from depression
+
+48132/50739
+```
+
+(d) The expected count is (# of depressed x (# of 2-6 cups per week / total pop)) = 2607 x (6617/50739) = 340. And the contribution of this cell to the test statistic is (373-340)^2 / 340 = 3.20.
+
+(e) The test statistic is X^2 = 20.93, the p-value is:
+
+```{r}
+n <- 5
+k <- 2
+
+df <- (n-1)*(k-1)
+
+1 - pchisq(20.93, df)
+```
+
+(f) Since the p-value < 0.05,we conclude that there is an association between caffeinated coffee consumption and depression.
+
+(g) Yes, this is just one study on observation data, if there was more and even experimental data, maybe with similar results we can say this, but as of now, it is not sufficient enough for such a claim.
+
+
+
+
