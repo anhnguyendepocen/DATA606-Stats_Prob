@@ -1,0 +1,91 @@
+---
+title: 'CUNY MSDS DATA 606 HW #7'
+author: "Samantha Deokinanan"
+date: "April 7, 2019"
+output: 
+  html_document:
+    theme: cerulean
+    highlight: pygments
+---
+#### Chapter 7 - Introduction to Linear Regression
+
+***
+##### Question 7.24 Nutrition at Starbucks, Part I.
+
+(a) There is a positive linear relationship between the number of calories and the amount of carbohydrates that Starbucks food menu items contain.
+
+(b) The explanatory variable is calories, and the response variable is the carbohydrates.
+
+(c) One might be interested in predicting the number of carbohydrates an item might contain since it is not displayed.
+
+(d) The conditions are:
+
+* *Linearity*: Based on the scatterplot, a moderate to weak a linear relationship is quite possible.
+* *Nearly normal residual*: From the histogram of the residual, the residuals looks slightly left skewed but can still pass as normal.
+* *Constant variability*: The residual plot suggests that there is no constant variability for residuals. 
+* *Independent observation*: Each item is independent of the other even if they are all Starbucks items.
+
+***
+##### Question 7.26 Body measurements, Part III
+
+(a) Equation of the regression line for predicting height is $\hat{height} = \beta_0 + \beta_1*girth$ where $\beta_0$ is the intercept and $\beta_1$ is the slope.
+
+(b) The $\beta_0$ (intercept) represents the height in centimeters at shoulder girth of 0 cm.
+
+The $\beta_1$ (slope) represents the rate of increase in height for each centimeter increase in shoulder girth.
+
+(c) 
+
+```{r}
+# R-squared
+corr <- 0.67
+r2 <- corr^2; r2
+```
+
+$R^2$ of 0.4489 means that that the model explains 44.89% variability of height around its mean.
+
+(d)
+
+```{r}
+mgirth <- 107.20; sdgirth <- 10.37; mheight <- 171.14; sdheight <- 9.41
+
+# Slope, B1
+b1 <- (sdheight/sdgirth) * corr
+
+# Intercept, B0
+b0 <- mheight - b1*mgirth
+
+# The height of a student who has a shoulder girth of 100 cm:
+b0 + b1*100
+```
+
+(e) If the student is 160 cm tall, the $residual = 160.0 - 166.7626 = -6.7626$
+
+(f) The original data set had a response variable values between ~80 and 140 cm. A measure of 56 is outside the sample and would require extrapolation which would not lead to uncertainty as there may be many confounding factors with development that may not be accounted for in this model.
+
+***
+##### Question 7.30 Cats, Part 1
+
+(a) The linear model is that $heart weight (g) = -0.357 + 4.034 * body weight (kg)$
+
+(b) The $\beta_0$ (intercept) represents the heart weight in grams at a body weight of 0 kg. It is expected that the heart weight in cats with 0 kg body weight is -0.357 g, though not meaningful.
+
+(c) The $\beta_1$ (slope) represents the rate of increase in heart weight for each grams increase in body weight. It is expect that an additional 4.034 grams in the heart weight for each additional kg increase in body weight.
+
+(d) $R^2$ of 64.66% means that that the model explains 64.66% variability of heart weight around its mean.
+
+(e) The correlation coefficient is $\sqrt{R^2} = \sqrt{0.6466} = 0.804$.
+
+***
+##### Question 7.40 Rate my professor
+
+(a) The linear model is $teaching evalution = 4.010 + \beta_1 * beauty$ . This mean the average teaching evaluation score of $3.9983 = 4.010 + \beta_1 * (avg standardized beauty score of -0.0883$. Thus, $\beta_1 = (3.9983-4.010)/ (-0.0883) = 0.133$
+
+(b) Yes, because the predictor variable beauty is statistically significant since it's p-value < 0.05 at a 95% confidence level. In addition, while the plot has a slight upward trend, it shows a little increase in the rate.
+
+(c) The conditions are:
+
+* *Linearity*: Based on the scatterplot, a moderate to weak a linear relationship is quite possible.
+* *Nearly normal residual*: From the histogram of the residual and the Normal Q-Q plot, the residuals looks slightly left skewed but can still pass as nearly normal.
+* *Constant variability*: The residual plot suggests that there is no constant variability for residuals. 
+* *Independent observation*: The order of data collection plot suggests that there is no pattern making the observations independent from each other.
