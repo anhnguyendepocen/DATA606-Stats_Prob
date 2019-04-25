@@ -1,0 +1,109 @@
+---
+title: 'CUNY MSDS DATA 606 HW #8'
+author: "Samantha Deokinanan"
+date: "April 28, 2019"
+output: 
+  html_document:
+    theme: cerulean
+    highlight: pygments
+---
+#### Chapter 8 - Multiple and Logistic Regression
+
+***
+##### Question 8.2 Baby weights, Part II
+
+(a) The equation of the regression line is $\hat{y} = \beta_0 + \beta_1 x => 120.07 - 1.93 (parity)$.
+
+(b) The slope represents that the average birth weight decreases by 1.93 ounces if a child is not the first born. The predicted birth weight of first born is $\hat{y} = \beta_0 + \beta_1 * 0 = 120.07 ounces$ while for the others $\hat{y} = \beta_0 + \beta_1 * 1 =  118.14 ounces$.
+
+(c) With a corresponding p-value of 0.1052, at a 95% significance level, the test fail to reject the null, suggesting that there is insufficient evidence to support that there is a relation between birth weight and parity.
+
+***
+
+##### Question 8.4 Absenteeism
+
+(a) The equation of the regression line is $\hat{y} = \beta_0 +\beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 => 18.93 - 9.11 (eth) + 3.10 (sex) + 2.15 (Irn)$.
+
+(b) What each slope represents is listed below:
+
+* eth: there is an average decrease of 9.11 days if the student comes from a not aboriginal background.   
+* sex: there is an average increase of 3.10 days absent if the student is a male.   
+* Irn: there is an average increase of 2.15 days if the student is classified as a slow learner.  
+
+(c) The residual is difference between the actually number of days missed and the predicted number.
+
+```{r}
+y_hat <- 18.93 - 9.11 * (0) + 3.10 * (1) + 2.15 * (1)
+
+# The residual is
+2 - y_hat
+```
+
+(d) Given $Var(e_i) = 240.57$ and $Var(y_i) = 24.17$, the $R^2$ and adjusted $R^2$ can be found using:
+
+```{r}
+# R-squared = 1 - (var(e_i)/var(y_i))
+1 - (240.57)/(264.17)
+
+# adjusted R-squared = 1 - [(var(e_i)/var(y_i)) * ((n-1)/(n-k-1))]
+1 - ((240.57/264.17)*((146-1)/(146-3-1)))
+```
+
+***
+
+##### Question 8.8 Absenteeism, Part II
+
+The `No learner status` variable should be removed since its adjusted $R^2$ is larger than the baseline full model, therefore if removed, the model improves.
+
+***
+
+##### Question 8.16 Challenger disaster, Part I
+
+(a) It is apparent that the colder temperature is associated with more damaged o-rings, whereas when the temperature got warmer, the probability of a broken o-ring decreased.
+
+(b) The model shows that it was statistically significant that for every degree increase in temperature, the probability of a damaged o-ring is decreased by 0.2162. This suggest that temperature has an effect on o-rings of the shuttles.
+
+(c) The logistic model is $log( \hat{p} / (1- \hat{p})) = 11.6630 - 0.2162 * temperature$.
+
+(d) Yes, since the model returned was statistically significant, there is concerns regarding the o-rings.
+
+***
+
+##### Question 8.18 Challenger disaster, Part II
+
+(a) The probability that an o-ring will become damaged for temperatures of 51, 53 and 55 degrees are 0.654, 0.550 and 0.443, respectively.
+
+```{r}
+prob <- function(temp){
+  Probdamage <- 11.6630 - 0.2162 * temp
+  p_hat <- exp(Probdamage) / (1 + exp(Probdamage))
+  return (p_hat)
+}
+
+# Probability of a damaged o-ring at temperature of 51 degrees is
+prob(51)
+
+# Probability of a damaged o-ring at temperature of 53 degrees is
+prob(53)
+
+# Probability of a damaged o-ring at temperature of 55 degrees is
+prob(55)
+```
+
+(b) 
+
+```{r message=FALSE, warning=FALSE}
+temperature <- c(51:83)
+probability <- prob(temperature)
+data <- cbind.data.frame(temperature, probability)
+
+library(ggplot2)
+ggplot(data, aes(x = temperature,y = probability)) + geom_point() + geom_smooth(method="glm", method.args=list(family="binomial"), se=FALSE) + ggtitle("Probability of o-ring becoming damaged by temperature")
+```
+
+(c) An assumption the needs to be tested before conducting a logistic regression is that the outcome is independent of all other outcomes. In this example, temperature is the only independent variable but the reason of failure could be because of some other cause this question is not investigating.
+
+***
+  
+  
+  
