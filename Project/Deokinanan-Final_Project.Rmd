@@ -1,0 +1,395 @@
+---
+title: "DATA 606 Final Project"
+author: "Samantha Deokinanan"
+date: "5th May 2019"
+output:
+  html_document:
+    theme: journal
+    toc: TRUE
+    toc_depth: 4
+---
+***
+### Introduction
+***
+Clean air is vital as it provides oxygen and other gases that sustain the delicate balance of life on Earth. However, the quality of the air can be affected by air pollution. Air pollution occurs when certain gases and particles build up in the atmosphere to such levels that they can cause disease, death to humans, damage to other living organisms such as food crops, or damage to the natural or man-made environment. These substances, known as pollutants, can be solid particles, liquid droplets, or gases, and are classified as primary or secondary pollutants. The primary pollutant tends to come from man-made sources, including the burning of fossil fuels such as coal, oil, petrol or diesel, but can also come from natural sources such as volcanic eruptions and forest fires. Unlike primary pollutants, secondary pollutants are not emitted directly. Rather, they form in the air when primary pollutants as a result of chemical reactions. The federal Clean Air Act authorized the Environmental Protection Agency (EPA) to set National Ambient Air Quality Standards (NAAQS) for pollutants that threaten human health and public welfare throughout the country (*Clean Air Act, EPA*). EPA established NAAQS for six most common pollutants called “criteria” air pollutants: ground-level ozone ($O_3$), fine particulate matter ($PM_2.5$ and $PM_10$), carbon monoxide (CO), nitrogen dioxide ($NO_2$), sulfur dioxide ($SO_2$), and lead (Pb), among which ground level $O_3$, $PM_2.5$ and $NO_2$ (main component of $NO_x$) are the most widespread health threats.
+
+![SEPA: The chemistry of air pollution](C:/Users/Deokinanan/Desktop/2019 -2021 CUNY SPS/SPRING 2019/DATA 606\Project/picture 1.png)
+
+***
+#### Primary Pollutants
+***
+
+The primary pollutant, carbon monoxide is one of the most harmful air pollutants. It is majorly produced from motor vehicle exhaust, along with other primary pollutants such as nitrogen oxides (eg nitrogen dioxide, $NO_2$). Particulate matter is a complex mixture of organic and inorganic substances, present in the atmosphere as both liquids and solids. Coarse particulates can be regarded as those with a diameter greater than 2.5 micrometers ($\mu m$), usually contain earth crustal materials and dust from road vehicles and industries, and fine particles less than 2.5 $\mu m$, contains aerosols, combustion particles, and re-condensed organic and metallic vapors. Another primary pollutant is sulfur dioxide ($SO_2$), released from power stations and industrial plants. 
+
+Air pollution has a serious toxicological impact on human health and the environment. CO is poisonous when inhaled because it combines faster with hemoglobin, the oxygen-carrying substance in red blood cells, than oxygen. As a result, the lack of oxygen causes cells and tissues to die. Similarly, in significant concentrations, nitrogen dioxide is highly toxic, causing serious lung damage with a delayed effect. It also plays a major role in the atmospheric reactions that produce ground-level $O_3$ or smog. Whereas fine particles of less than 10 $\mu m$ in diameter can penetrate deep into the lung and cause more damage, and $SO_2$ pollution is known to cause heart disease and bronchitis. Pollutants have even more adverse effect when in moderate concentrations as it can lead to a fall in lung function in asthmatics. $SO_2$ pollution is considered more harmful when particulate and other pollution concentrations are high. This is known as the "cocktail effect." Increasing concentration of these gases in the atmosphere also causes global warming and climate change as $N_2O$ has 310 times more global warming potentiality than $CO_2$ (*Sen et al, 2017*).
+
+***
+#### Secondary Pollutants 
+***
+
+Ground level $O_3$ is a prominent example of a secondary pollutant, formed by the action of sunlight on volatile organic compounds such as Benzene ($C_6H_6$) in the presence of $NO_2$. There are no direct man-made emissions of $O_3$ to the atmosphere. Ozone can cause irritation to the respiratory tract and eyes, causing chest tightness, coughing and wheezing, especially amongst those with respiratory and heart problems. Ground level $O_3$ can also have detrimental effects on plants and ecosystems, including damage to plants, reductions of crop yield, and an increase of vegetation vulnerability to disease
+(*Criteria Air Pollution, EPA*).
+
+***
+#### Research Objective
+***
+
+As air pollution is a complex mixture of toxic components with considerable impact on humans, many experts claim that forecasting air pollution concentration is a priority for improving life quality (*De Vito et al, 2008; Peng, 2015; Sen et al, 2017*). The goals of this project are to investigate the following: 
+
+* What are the predictors that affect the level of specific pollutants in the air? How impactful is their presence?  
+
+* With the significant predictor(s) that affects the levels of pollutants in the air, how do they change based on the season? Is a season more prone to more emission of one or more of a specific air pollutant than another?  
+
+* When non-metallic hydrocarbon are combusted, they produce CO. With the limited data on NMHC concentration (90% missing values), is NMHC still a contributor in predicting the level of CO in the air given this data? 
+
+***
+### Data
+***
+
+The data was collected by Saverio De Vito (saverio.devito '@' enea.it) from ENEA - National Agency for New Technologies, Energy and Sustainable Economic Development. It was then submitted to the University of California Irvine, School of Information and Computer Science, Machine Learning Repository. It contains 9358 instances of hourly averaged responses from an array of 5 metal oxide chemical sensors embedded in an Air Quality Chemical Multi-sensor Device. The device was located on the field in a significantly polluted area, at road level, within an Italian city, thus making this an observational study. Data were recorded from March 2004 to February 2005 (one year) representing the longest freely available recordings of on-field deployed air quality chemical sensor devices responses. 
+
+The response variables are the 10 hourly averaged responses from an Air Quality Chemical Multisensor Device, in addition to Temperature, Relative Humidity, and Absolute Humidity records. All of which are quantitative. The independent variables are the data and time the responses were recorded. While `Time` is quantitative, `Date` was in both quantitative and qualitative formats for different analyses. `Date` was tidied and transformed into qualitative variables `Season`, and `MonthName`. The variables of the **original** data set are:
+
+(1) Date (DD/MM/YYYY)   
+(2) Time (HH.MM.SS)   
+(3) True hourly averaged concentration CO in $microg/m^3$ (reference analyzer)   
+(4) PT08.S1 (tin oxide) hourly averaged sensor response (nominally CO targeted)      
+(5) True hourly averaged overall Non-Metallic HydroCarbons concentration in $microg/m^3$ (reference analyzer)   
+(6) True hourly averaged Benzene concentration in $microg/m^3$ (reference analyzer)  
+(7) PT08.S2 (titania) hourly averaged sensor response (nominally NMHC targeted)      
+(8) True hourly averaged NOx concentration in ppb (reference analyzer)   
+(9) PT08.S3 (tungsten oxide) hourly averaged sensor response (nominally NOx targeted)   
+(10) True hourly averaged $NO_2$ concentration in $microg/m^3$ (reference analyzer)      
+(11) PT08.S4 (tungsten oxide) hourly averaged sensor response (nominally $NO_2$ targeted)      
+(12) PT08.S5 (indium oxide) hourly averaged sensor response (nominally $O_3$ targeted)   
+(13) Temperature in $^\circ C$      
+(14) Relative Humidity (%)   
+(15) AH Absolute Humidity  
+
+Building a predictive quantitative tool that can easily be used and provide valuable information on individual pollutants and one-hour average concentration will make it more flexible to future changes. Such results may also be beneficial to other researchers, environmentalist, enthusiasts, and meteorologists. While these results cannot be generalized to all populations, with collected air quality data from any location, the methods can be replicated to determine the predictors that affect the level of specific pollutants in the air those locations. Moreover, this data cannot be used to establish causal links between the variables of interest. Poor air quality is associated with serious toxicological impact on human health and the environment, however, studies have shown that there is no overall reduction in mortality with improved air quality, thus causality is not supported. 
+
+***
+### Exploratory Data Analysis
+***
+
+The data set is retrieved in its raw form, and have the independence of observation since they were collected daily. Therefore some data tidying and transformation are conducted, in addition to exploratory data analysis.
+
+***
+#### Data Tidy & Transformation
+***
+
+```{r setup, echo=TRUE, results='hide', warning=FALSE, message=FALSE}
+# The required R packages
+library(tidyverse)
+library(lubridate)
+library(MASS)
+library(caret)
+library(olsrr)
+library(psych)
+library(rcompanion)
+library(mctest)
+
+# Load the .csv file from local machine
+AirQualityUCI <- read_csv("AirQualityUCI.csv", col_types = cols(AH = col_number(), `C6H6(GT)` = col_number(), `CO(GT)` = col_number(), Date = col_date(format = "%m/%d/%Y"), `NMHC(GT)` = col_number(), `NO2(GT)` = col_number(), `NOx(GT)` = col_number(), `PT08.S1(CO)` = col_number(), `PT08.S2(NMHC)` = col_number(), `PT08.S3(NOx)` = col_number(), `PT08.S4(NO2)` = col_number(), `PT08.S5(O3)` = col_number(), RH = col_number(), T = col_number(), Time = col_time(format = "%H:%M:%S")))
+
+# Identifying seasons and month names, and split date into year, month, and day
+## Month Name
+AirQualityUCI$MonthName <- month(ymd(AirQualityUCI$Date), label = TRUE, abbr = FALSE)
+
+## Identify the season
+Season <- function(Date) {
+    Winter <- as.Date("2003-12-20", format = "%Y-%m-%d") 
+    Spring <- as.Date("2004-3-20",  format = "%Y-%m-%d") 
+    Summer <- as.Date("2004-6-20",  format = "%Y-%m-%d") 
+    Fall <- as.Date("2004-9-20",  format = "%Y-%m-%d")
+    Winter2 <- as.Date("2004-12-20", format = "%Y-%m-%d")
+    ifelse (Date >= Winter & Date < Spring, "Winter 04", 
+      ifelse (Date >= Spring & Date < Summer, "Spring 04",
+        ifelse (Date >= Summer & Date < Fall, "Summer 04",
+          ifelse (Date >= Fall & Date < Winter2, "Fall 04", "Winter 05"))))
+}
+
+AirQualityUCI$Season <- Season(AirQualityUCI$Date)
+
+## Split date into year, month and day
+AirQualityUCI <- AirQualityUCI %>%
+  separate(Date, sep="-", into = c("Year", "Month", "Day"))
+
+# Missing values (indicated by -200) reassigned to NA
+AirQualityUCI[AirQualityUCI == -200] <- NA
+
+str(AirQualityUCI)
+```
+
+***
+#### Relevant Summary Statistics 
+***
+
+From the results below, a few variables such as `CO(GT)`, `C6H6(GT)`, and `NOx(GT)` are highly skewed. 
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+# Checking the normality of the variables of interest
+sapply(AirQualityUCI[,c(5:17)], describe)
+
+par(mfrow = c(2,2))
+plotNormalHistogram(AirQualityUCI$`CO(GT)`, main = "CO(GT)")
+plotNormalHistogram(AirQualityUCI$`C6H6(GT)`, main = "C6H6(GT)")
+plotNormalHistogram(AirQualityUCI$`NOx(GT)`, main = "NOx(GT)")
+plotNormalHistogram(AirQualityUCI$`PT08.S3(NOx)`, main = "PT08.S3(NOx)")
+```
+
+Thus, these variables are normalized before any analysis is conducted. As a result, while the transformed data successfully follow a normal distribution very well, `NOx(GT)` is probably about as close as I can get with this particular data.
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+# Add a value of 1 to each record and log-transform the specific data
+AirQualityUCI[,c(5,8,10,11)] <- log(AirQualityUCI[,c(5,8,10,11)]+1)
+sapply(AirQualityUCI[,c(5,8,10,11)], describe)
+
+par(mfrow = c(2,2))
+plotNormalHistogram(AirQualityUCI$`CO(GT)`, main = "CO(GT)")
+plotNormalHistogram(AirQualityUCI$`C6H6(GT)`, main = "C6H6(GT)")
+plotNormalHistogram(AirQualityUCI$`NOx(GT)`, main = "NOx(GT)")
+plotNormalHistogram(AirQualityUCI$`PT08.S3(NOx)`, main = "PT08.S3(NOx)")
+par(mfrow = c(1,1))
+```
+
+Testing of the assumptions before an ANOVA can be done was conducted for ozone. It is clear that the observations are obtained independently and randomly from the population defined by the factor levels. The data of each factor level are nearly normally distributed and these normal populations have a common variance. In addition, it is apparent that the ozone concentration tends to decrease from Winter to Summer but increases again in Fall.
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.align='center'}
+AirQualityUCI$Season <- as.factor(AirQualityUCI$Season)
+AirQualityUCI$Season <- factor(AirQualityUCI$Season , levels = levels(AirQualityUCI$Season)[c(4, 2, 3, 1, 5)])
+
+describeBy(AirQualityUCI$`PT08.S5(O3)`, 
+           group = AirQualityUCI$Season, mat=TRUE)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+ggplot(AirQualityUCI, aes(x = Season, y = `PT08.S5(O3)`)) +
+  geom_boxplot(fill = "grey80", colour = "blue", outlier.shape = NA) +
+  stat_summary(fun.y=mean, geom="point", shape=10, size=10, color="red", fill="red")+
+  scale_x_discrete() + xlab("Season") +
+  ylab("Concentration of Ozone") + ggtitle("Boxplots of Ozone records for each Season")
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+ggplot(data=AirQualityUCI,aes(x=`PT08.S5(O3)`, group=Season, fill=Season)) + geom_density(adjust=1.5 , alpha=0.2) + xlab("Season") +  ylab("Concentration of Ozone") + ggtitle("Density Plots of Ozone records for each Season")
+```
+
+***
+#### Outliers and Missing Data
+***
+
+The outlier plots revealed that there are a few extreme values that can influence the analysis. Given that there were initially n = 9358, and the variable `NMHC(GT)` was only reported for 9.7% of the cases, it was therefore excluded from the analyses. Outliers and missing data were corrected by capping it by replacing those observations outside the lower limit with the value of 5th percentile and those that lie above the upper limit, with the value of the 95th percentile. It is apparent from the plots of the reduction of the outliers in data from the before and after diagnostic plots.
+
+```{r}
+# Outlier Plots
+model <- lm(`PT08.S5(O3)` ~ `CO(GT)` + `PT08.S1(CO)` + `C6H6(GT)` + `PT08.S2(NMHC)` + `NOx(GT)` + `PT08.S3(NOx)` + `NO2(GT)` + `PT08.S4(NO2)` + T + RH + AH, data = AirQualityUCI)
+ols_plot_diagnostics(model)
+
+AirQualityUCIx <- AirQualityUCI[,-c(7)]
+
+AirQualityUCIx1 <- AirQualityUCIx[,5:16] %>% dplyr::rename_all(paste0, "a")
+AirQualityUCIx[,5:16] <- AirQualityUCIx1 %>% mutate_at(vars(ends_with("a")), funs(ifelse(is.na(.), median(., na.rm = TRUE),.)))
+
+# Remove Outlier
+remove_outliers <- function(x, na.rm = TRUE, ...) {
+  qnt <- quantile(x, probs = c(.30, .70), na.rm = na.rm, ...)
+  caps <- quantile(x, probs=c(.05, .95), na.rm = T)
+  H <- 1.5 * IQR(x, na.rm = na.rm)
+  y <- x
+  y[x < (qnt[1] - H)] <- caps[1]
+  y[x > (qnt[2] + H)] <- caps[2]
+  y
+}
+remove_all_outliers <- function(df){
+  df[,sapply(df, is.numeric)] <- lapply(df[,sapply(df, is.numeric)], remove_outliers)
+  df
+}
+AirQualityUCIx <- remove_all_outliers(AirQualityUCIx)
+
+# New diagnostic plots
+model <- lm(`PT08.S5(O3)` ~ `CO(GT)` + `PT08.S1(CO)` + `C6H6(GT)` + `PT08.S2(NMHC)` + `NOx(GT)` + `PT08.S3(NOx)` + `NO2(GT)` + `PT08.S4(NO2)` + T + RH + AH, data = AirQualityUCIx)
+ols_plot_diagnostics(model)
+```
+
+***
+#### Initial Tests
+***
+
+Based on the research questions, the statistical test that will be conducted is a regression. Because the data consist of hourly averaged sensor response in addition to the true hourly averaged concentration, there are concerns of possible multicollinearity. Thus, a collinearity diagnostic test is firstly done to examining the diagnostic output for variance inflation factor, tolerance, and Farrar-Glauber F-test. The F-statistic for the variable `PT08.S2(NMHC)` is quite high (44.3239) followed by the variable `C6H6(GT)` (F -value of 31.7851), `T` (F-value of 14.7968), and `PT08.S4(NO2)` (F -value of 14.4250). So the test shows that there are multiple variables that will be the root cause of multicollinearity, specifically the `PT08.S4(NO2)` and `RH` coefficients are non-significant may be due to multicollinearity. Moreover, as expected, there are high partial correlations found to be highly statistically significant. As a solution to deal with multicollinearity, there are several remedial measures such as Stepwise Regression which will be used as a result of this diagnostic test.
+
+```{r}
+imcdiag(as.matrix(AirQualityUCIx[,c(5:12,14:16)]), as.matrix(AirQualityUCIx$`PT08.S5(O3)`))
+corr.test(as.matrix(AirQualityUCIx[,c(5:12,14:16)]), method = "pearson")
+```
+
+***
+### Inference
+***
+#### Part 1
+***
+
+With ground level $O_3$ being a prominent example of a secondary pollutant with serious consequences to human and Earth, it is a prime indicator of air quality. Since $O_3$ is formed by the action of sunlight on volatile organic compounds such as Benzene ($C_6H_6$) in the presence of $NO_2$, a stepwise variable selection model is conducted to determine what are the predictors that affect the level of ozone in the air. The stepwise variable selection allows variables to be added one at a time to the model, as long as the F-statistic is below the specified $\alpha$, in this case $\alpha = 0.05$. However, variables already in the model do not necessarily stay in. The steps evaluate all of the variables already included in the model and remove any variable that has an insignificant F-statistic. Only after this test ends, is the best model found, that is when none of the variables can be excluded and every variable included in the model is significant. 
+
+Here the dependent variable is the continuous variable, `PT08.S5(O3)`, and the independent variables are the full model to identify the most contributing predictors.
+
+```{r eval= FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Fit the full model
+model <- lm(`PT08.S5(O3)` ~ `CO(GT)` + `PT08.S1(CO)` + `NMHC(GT)` + `C6H6(GT)` + `PT08.S2(NMHC)` + `NOx(GT)` + `PT08.S3(NOx)` + `NO2(GT)` + `PT08.S4(NO2)` + T + RH + AH + Season, data = AirQualityUCIx)
+
+# Stepwise Regression model
+step <- stepAIC(model, direction = "both")
+```
+
+```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+
+# Fit the full model
+model <- lm(`PT08.S5(O3)` ~ `CO(GT)` + `PT08.S1(CO)` + `C6H6(GT)` + `PT08.S2(NMHC)` + `NOx(GT)` + `PT08.S3(NOx)` + `NO2(GT)` + `PT08.S4(NO2)` + T + RH + AH + Season, data = AirQualityUCIx)
+
+# Stepwise Regression model
+step <- stepAIC(model, direction = "both")
+```
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+# Set up repeated k-fold cross-validation
+set.seed(525)
+
+train.control <- trainControl(method = "cv", number = 10)
+
+# Train the model
+step.model <- train(`PT08.S5(O3)` ~ `CO(GT)` + `PT08.S1(CO)` + `C6H6(GT)` + `PT08.S2(NMHC)` + `NOx(GT)` + `PT08.S3(NOx)` + `NO2(GT)` + `PT08.S4(NO2)` + T + RH + AH + Season, data = AirQualityUCIx, method = "lmStepAIC", trControl = train.control, trace = FALSE)
+
+# Model accuracy
+step.model$results
+
+# Final model coefficients
+step.model$finalModel
+
+# Summary of the model
+summary(step.model$finalModel)
+```
+
+After steps, the final model resulted to be:
+
+$O_3 = 2102.6 - 44.3 CO + 0.62 CO_{sensor} + 0.58 NMHC_{sensor} + 14.73 NOx - 326.52 NOx_{sensor}$ 
+      $+ 0.74 NO_2 - 11.01 T - 11.01 RH + 38.64 AH - 38.64 Season_{Spring} - 57.71 Season_{Fall} - 116.10 Season_{Winter}$
+
+with $R^2$ = 0.89, suggesting that this model accounts for 89% of the variation in the dependent variable with the independent variables above which is highly impressive. However, when examining the sensor variables and the true concentration variables as two separate models, with the sensors concentrations and full model, the difference in the $R^2$ was 0.0030852. This suggests that adding these extra variables did not have a very impactful increase on the explained variance. Therefore, it can be safe to select the following model as the best model since it actually only contains these variables, further indicating what the significant predictors of ozone are:
+
+$O_3 = 2213.9 + 0.63 CO_{sensor} + 30.7 C_6H_6 + 0.58 NMHC_{sensor} - 330.27 NOx_{sensor} - 0.049 NO_{2sensor}$
+      $- 10.03 T + 15.94 AH - 64.0 Season_{Spring} - 56.26 Season_{Fall} - 56.26 Season_{Winter}$
+
+```{r}
+set.seed(10)
+
+step.model <- train(`PT08.S5(O3)` ~ `CO(GT)` + `C6H6(GT)` + `NOx(GT)` + `NO2(GT)` + T + RH + AH + Season, data = AirQualityUCIx, method = "lmStepAIC", trControl = train.control, trace = FALSE)
+
+# Model accuracy
+step.model$results
+
+step.model <- train(`PT08.S5(O3)` ~ `PT08.S1(CO)` + `C6H6(GT)` + `PT08.S2(NMHC)` + `PT08.S3(NOx)` + `PT08.S4(NO2)` + T + RH + AH + Season, data = AirQualityUCIx, method = "lmStepAIC", trControl = train.control, trace = FALSE)
+
+# Model accuracy
+step.model$results
+```
+
+***
+#### Part 2 
+***
+
+During the day, ozone formation occurs. However, during the night, when solar radiation and temperatures are low ozone is destroyed. Similar sequences of reactions occur on an annual basis, with chemical destruction of ozone reaching a peak in winter and a minimum in summer due to variations in sunlight and UV radiation between the seasons. As a result, ozone concentrations tend to be higher in June, July, and August in the northern hemisphere. With these significant predictors that affect the levels of ozone in the air, an analysis of variance (ANOVA) is carried out to understand how do they vary based on the season, and whether any season is more prone to more emissions of one or more of a specific air pollutant than another.  
+
+Here the dependent variable is the continuous variable, `PT08.S5(O3)`, and the independent variables is `Season`. In the exploratory data analysis, the assumption for conducting an ANOVA was conducted and passed, thus the testing hypothesis is:
+
+$H_0$ : the means of the different groups are the same, $\mu_1 = \mu_2 =...= \mu_n$.
+
+$H_1$ : at least one sample mean is not equal to the others $\mu_j \neq \mu_k$.
+
+As the p-value is less than the significance level 0.05, it can be concluded that there are significant differences between `Season`. The computed Tukey HSD (Tukey Honest Significant Differences) for performing multiple pairwise-comparison between the means of Spring 2004 and Summer 2004 shows that was no significant difference since the adjusted p-value = 0.63. This suggests the concentration of ozone from Spring 2004 to Summer 2004 did not significantly differ, while every other season's ozone concentration did differ.
+
+```{r}
+res.aov <- aov(`PT08.S5(O3)`~ Season, data = AirQualityUCIx)
+
+# Summary of the analysis
+summary(res.aov)
+TukeyHSD(res.aov)
+```
+
+Moreover, from the analysis, it appears that during warmer weather, ozone concentrations were not as low as expected. The table below depicts the temperature per season which can be compared to the ozone, benzene and nitrogen oxides concentration level. Further research revealed that ozone levels do not always increase with increases in temperature, such as when the ratio of VOCs to NOx is low. And, it shows that the NOx and benzene concentrations were lower in the Summer of 2004 even though the temperature was high.
+
+```{r}
+temp <- by(AirQualityUCIx$T, AirQualityUCIx$Season, mean)
+ozone <- by(AirQualityUCIx$`PT08.S5(O3)`, AirQualityUCIx$Season, mean)
+NOx <- by(AirQualityUCIx$`PT08.S3(NOx)`, AirQualityUCIx$Season, mean)
+C6H6 <- by(AirQualityUCIx$`C6H6(GT)`, AirQualityUCIx$Season, mean)
+cbind(temp, ozone, NOx, C6H6)
+```
+
+***
+#### Part 3 
+***
+
+When non-metallic hydrocarbon are combusted, they produce CO. With the limited data on NMHC concentration (90% missing values), is NMHC still a contributor in predicting the level of CO in the air given this data? 
+
+After purging all the incomplete records, the data set has a sample size of n = 827. The assumption for linear regression, as the scatter plot reveals, there is a linear relationship between the dependent variable, `CO(GT)` and independent variable, `NMHC(GT)`.  The testing hypothesis in this linear regression becomes:
+
+$H_0$: the coefficients associated with the variables is equal to zero. 
+
+$H_A$: the coefficients are not equal to zero.
+
+Moreover, the diagnostic plots are used checks for heteroscedasticity, normality, and influential observations.
+
+```{r}
+# Purge incomplete records
+AirQualityNA <- na.omit(AirQualityUCI)
+
+# Test the assumpution for a regression
+scatter.smooth(log(AirQualityNA$`NMHC(GT)`) , AirQualityNA$`CO(GT)`)
+ 
+fit <- lm(`CO(GT)` ~ log(`NMHC(GT)`), data = AirQualityNA)
+summary(fit)
+
+layout(matrix(c(1,2,3,4),2,2))  
+plot(fit)
+```
+
+From the model above, it is shows that carbon monoxide constant level in 2004 was -0.832, and that for every 1 $mg/m^3$ increase in the log(`NMHC(GT)`) concentration in the air, the concentration of carbon monoxide goes up by 0.38945 $microg/m^3$, which can vary by 0.00572 $microg/m^3$.
+
+Moreover, the Residuals vs Fitted and Spread-Location further confirms the linear relationship and homoscedasticity between CO and NMHC since there is an equal spread of residuals around a horizontal line without distinct patterns. The Normal Q-Q follows a straight line well and there aren't many cases outside of the Cook’s distance which can be influential to the regression results. Thus, the equation of the line is:
+
+$CO =  -0.83237 + 0.38945 log(NMHC)$  
+
+***
+### Conclusion
+***
+
+The prominent example of a secondary pollutant with serious consequences to human and Earth, ozone, was found to differ by season. Ozone's impact on climate consists primarily of changes in temperature. The more ozone in a given parcel of air, the more heat it retains. From this analysis and further research, it is evident that ozone levels do not always increase with temperature because the ratio of VOCs to NOx can sometimes be low. This was the case in Summer 2004, where the NOx and Benzene concentration were different, i.e. lower, resulting in the lower concentration of ozone. Thus, there were significant differences in its level among the seasons. 
+
+Moveover, the best model for ozone concentration that accounts for 88% of the variation in the dependent variable is:
+
+$O_3 = 2213.9 + 0.63 CO_{sensor} + 30.7 C_6H_6 + 0.58 NMHC_{sensor} - 330.27 NOx_{sensor} - 0.049 NO_{2sensor}$
+      $- 10.03 T + 15.94 AH - 64.0 Season_{Spring} - 56.26 Season_{Fall} - 56.26 Season_{Winter}$
+
+When looking at another air pollutants that are also dependent on other elements in the air, it was found that non-metallic hydrocarbon is a contributor in predicting the level of CO in the air. The linear model shows that for every 1 $mg/m^3$ increase in the log(`NMHC(GT)`) concentration in the air, the concentration of carbon monoxide goes up by 0.38945 $microg/m^3$. 
+
+In this project, exploration of how to deal with multicollinearity variables was insightful. The easiest way to detect multicollinearity is to examine the correlation between each pair of explanatory variables. When it comes to the analysis, there are several remedial measures to deal with this problem such as Principal Component Regression, Ridge Regression, Stepwise Regression, etc.
+
+Lastly, an additional analysis which can provide more insights when it comes to monitoring air quality is by using time series methods. Time series analysis accounts for the fact that data points taken over time may have an internal structure (such as autocorrelation, trend or seasonal variation) that should be accounted for. Since this project was interested in the seasonal concentration, trends can be investigated by looking at periodic fluctuations.
+
+***
+### References
+***
+
+* Bruce, Peter, and Andrew Bruce. 2017. Practical Statistics for Data Scientists. O’Reilly Media.
+
+* De Vito, S., Massera, E., Piga, M., Martinotto, L., Di Francia, G. "On field calibration of an electronic nose for benzene estimation in an urban pollution monitoring scenario, Sensors and Actuators B: Chemical" 129.2, 22 February 2008, 750-757, ISSN 0925-4005, [Web Link](https://www.sciencedirect.com/science/article/pii/S0925400507007691?via%3Dihub).
+
+* Dua, D. and Graff, C. (2019). [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml). Irvine, CA: University of California, School of Information and Computer Science.
+
+* EPA. [Criteria Air Pollutants](https://www.epa.gov/criteria-air-pollutants). U. S. Environmental Protection Agency. Accessed 28 April 2019.
+
+* EPA. [Summary of the Clean Air Act](https://www.epa.gov/laws-regulations/summary-clean-air-act). 42 U.S.C. §7401 et seq. (1970). The official text of the CAA is available in the United States Code on FDSys, from the US Government Printing Office. Accessed 27 April 2019.
+
+* Peng, Huiping. “Air Quality Prediction by Machine Learning Methods.” T. University of British Columbia, 2015. Web. 1 Apr. 2019. Theses and Dissertations (ETDs) 2015.
+
+* Sen, Abhishek & Khan, Indrani & Kundu, Debajyoti & Das, Kousik & Datta, Jayanta. (2017). Ecophysiological evaluation of tree species for biomonitoring of air quality and identification of air pollution-tolerant species. Environmental Monitoring and Assessment. 189. 1-15. 10.1007/s10661-017-5955-x. 
