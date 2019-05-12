@@ -315,7 +315,7 @@ summary(res.aov)
 TukeyHSD(res.aov)
 ```
 
-Moreover, from the analysis, it appears that during warmer weather, ozone concentrations were not as low as expected. The table below depicts the temperature per season which can be compared to the ozone, benzene and nitrogen oxides concentration level. Further research revealed that ozone levels do not always increase with increases in temperature, such as when the ratio of VOCs to NOx is low. And, it shows that the NOx and benzene concentrations were lower in the Summer of 2004 even though the temperature was high.
+Moreover, from the analysis, it appears that during warmer weather, ozone concentrations were not as high as expected. The table below depicts the temperature per season which can be compared to the ozone, benzene and nitrogen oxides concentration level. Further research revealed that ozone levels do not always increase with increases in temperature, such as when the ratio of VOCs to NOx is low. And, it shows that the NOx and benzene concentrations were lower in the Summer of 2004 even though the temperature was high.
 
 ```{r}
 temp <- by(AirQualityUCIx$T, AirQualityUCIx$Season, mean)
